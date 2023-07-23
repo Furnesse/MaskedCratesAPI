@@ -51,7 +51,7 @@ jobs:
 
       - name: Rename Jar
         run: |
-          mv target/MaskedCratesAPI-*.jar target/MaskedCratesAPI-${{ github.event.inputs.version }}.jar
+          mv target/MaskedCratesAPI-1.0-SNAPSHOT.jar target/MaskedCratesAPI-${{ github.event.inputs.version }}.jar
 
       - name: Create Release
         id: create_release
