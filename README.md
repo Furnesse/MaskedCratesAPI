@@ -1,4 +1,5 @@
 # MaskedCratesAPI Developer Documentation
+[![](https://jitpack.io/v/Furnesse/MaskedCratesAPI.svg)](https://jitpack.io/#Furnesse/MaskedCratesAPI) <---- Latest Version
 
 ## Introduction
 
