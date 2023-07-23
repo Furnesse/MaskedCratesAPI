@@ -60,7 +60,7 @@ jobs:
           files: |
             target/MaskedCratesAPI-${{ github.event.inputs.version }}.jar
           tag_name: ${{ github.event.inputs.version }}
-          release_name: Release v${{ github.event.inputs.version }}
+          name: Release v${{ github.event.inputs.version }}
           generate_release_notes: true
           draft: false
           prerelease: false
