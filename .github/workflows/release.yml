@@ -1,9 +1,11 @@
 name: Release on Main Push
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version for the release'
+        required: true
 
 jobs:
   build:
@@ -49,8 +51,8 @@ jobs:
         with:
           files: |
             target/MaskedCratesAPI-1.0-SNAPSHOT.jar
-          tag_name: v${{ github.run_number }}
-          release_name: Release v${{ github.run_number }}
+          tag_name: ${{ github.event.inputs.version }}
+          release_name: Release v${{ github.event.inputs.version }}
           draft: false
           prerelease: false
 
@@ -60,5 +62,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: target/MaskedCratesAPI-1.0-SNAPSHOT.jar
-          asset_name: MaskedCratesAPI-v${{ github.run_number }}.jar
+          asset_name: MaskedCratesAPI-${{ github.event.inputs.version }}.jar
           asset_content_type: application/java-archive
