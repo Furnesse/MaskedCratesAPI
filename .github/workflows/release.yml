@@ -26,7 +26,7 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - name: Build with Maven
-        run: mvn package
+        run: mvn package -f MaskedCratesAPI  # Specify the correct directory
         working-directory: ${{ github.workspace }}/MaskedCratesAPI
 
   release:
