@@ -9,32 +9,42 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: maven:3-jdk-8  # Use Java 8 with Node.js 16
+      image: maven:3-jdk-8
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Show Java version
+        run: java -version
+
+      - name: Show Maven version
+        run: mvn -version
+
       - name: Build with Maven
         run: mvn package
+        working-directory: MaskedCratesAPI
 
   release:
     needs: build
     runs-on: ubuntu-latest
     container:
-      image: maven:3-jdk-8  # Use Java 8 with Node.js 16
+      image: maven:3-jdk-8
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Show Java version
+        run: java -version
 
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            target/MaskedCratesAPI-*.jar  # Adjust the path to your built JAR file
-          tag_name: v${{ github.run_number }}  # Use the run number as the release version
+            MaskedCratesAPI/target/MaskedCratesAPI-*.jar
+          tag_name: v${{ github.run_number }}
           release_name: Release v${{ github.run_number }}
           draft: false
           prerelease: false
@@ -44,6 +54,6 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/MaskedCratesAPI-*.jar  # Adjust the path to your built JAR file
+          asset_path: MaskedCratesAPI/target/MaskedCratesAPI-*.jar
           asset_name: MaskedCratesAPI.jar
           asset_content_type: application/java-archive
