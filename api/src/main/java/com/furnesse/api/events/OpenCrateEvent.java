@@ -1,20 +1,21 @@
-package com.furnesse.maskedcrates.api.events;
+package com.furnesse.api.events;
 
-import com.furnesse.maskedcrates.api.model.Crate;
+import com.furnesse.api.model.crate.ICrate;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class OpenCrateEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private final CommandSender activator;
     private final Player player;
-    private final Crate crate;
+    private final ICrate crate;
     private boolean cancelled;
 
-    public OpenCrateEvent(CommandSender activator, Player player, Crate crate) {
+    public OpenCrateEvent(CommandSender activator, Player player, ICrate crate) {
         this.activator = activator;
         this.player = player;
         this.crate = crate;
@@ -29,7 +30,7 @@ public class OpenCrateEvent extends Event implements Cancellable {
         return player;
     }
 
-    public Crate getCrate() {
+    public ICrate getCrate() {
         return crate;
     }
 
@@ -44,7 +45,7 @@ public class OpenCrateEvent extends Event implements Cancellable {
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return handlers;
     }
 
