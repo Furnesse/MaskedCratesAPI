@@ -9,7 +9,7 @@ import java.util.List;
 
 public abstract class MaskedCratesAPI {
     // Use a list or a map to store registered plugins
-    private List<MaskedCratesExtension> registeredPlugins = new ArrayList<>();
+    private final List<MaskedCratesExtension> registeredPlugins = new ArrayList<>();
 
     // Method for plugins to register themselves
     public void registerPlugin(MaskedCratesExtension plugin) {
