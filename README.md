@@ -28,6 +28,7 @@ Maven:
     <groupId>com.github.Furnesse</groupId>
     <artifactId>MaskedCratesAPI</artifactId>
     <version>{VERSION}</version>
+    <scope>provided</scope>
 </dependency>
 ```
 
