@@ -89,9 +89,15 @@ public class MyPluginMain {
 }
 ```
 
-### Step 3: Implement Plugin Functionality
+### Step 3: Depend on the Plugin
 
-With your plugin registered, the `registerEffects()` and `registerAnimations()` methods from the `MaskedCratesExtension` interface will be called when MaskedCratesAPI initializes. Implement your plugin's functionality inside these method.
+Before implementing the plugin functionality, make sure your plugin depends on the MaskedCrates, inside your plugin.yml, `depend: [..., MaskedCrates]`, that way you plugin will load after the MaskedCrates has loaded, so the api can be hook into successfully.
+
+### Step 4: Implement PLugin Functionality
+
+Now that your plugin has successfully registered, you can implement its functionality inside the registerEffects() and registerAnimations() methods from the MaskedCratesExtension interface. These methods will be called when the MaskedCratesAPI initializes.
+
+By following these steps, you can ensure your plugin is properly integrated with the MaskedCrates system and that its functionality is executed as intended.
 
 ## Conclusion
 
@@ -101,30 +107,29 @@ By following these integration steps, your plugin will be seamlessly integrated 
 
 # Available methods from MaskedCratesAPI
 
-```java
-int getCratesOpened(Player player, Crate crate);
-```
-
 Gets the number of times the specified player has opened the given crate.
 
 ```java
-Crate getCrate(String crateName);
+int getCratesOpened(Player player, Crate crate);
 ```
 
 Gets the `Crate` object corresponding to the specified crate name.
 
 ```java
-Crate getCrate(ItemStack itemStack);
+Crate getCrate(String crateName);
 ```
 
 Gets the `Crate` object associated with the given `ItemStack` if it represents a crate.
 
 ```java
-void openCrate(Player player, Crate crate);
+Crate getCrate(ItemStack itemStack);
 ```
 
 Opens the specified crate for the given player.
 
+```java
+void openCrate(Player player, Crate crate);
+```
 ---
 
 # Using Events from MaskedCratesAPI
