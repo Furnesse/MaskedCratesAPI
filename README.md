@@ -89,9 +89,11 @@ public class MyPluginMain {
 }
 ```
 
-Step 3: Depend on the Plugin
+### Step 3: Depend on the Plugin
 
-Before implementing the plugin functionality, make sure your plugin depends on the MaskedCrates, inside your plugin.yml, `depend: [..., MaskedCrates]`
+Before implementing the plugin functionality, make sure your plugin depends on the MaskedCrates, inside your plugin.yml, `depend: [..., MaskedCrates]`, that way you plugin will load after the MaskedCrates has loaded, so the api can be hook into successfully.
+
+### Step 4: Implement PLugin Functionality
 
 Now that your plugin has successfully registered, you can implement its functionality inside the registerEffects() and registerAnimations() methods from the MaskedCratesExtension interface. These methods will be called when the MaskedCratesAPI initializes.
 
