@@ -26,20 +26,21 @@ jobs:
       
       - name: Get Version from POM
         id: get_version
-        run: echo ::set-output name=VERSION::$(grep -m1 '<version>' api/pom.xml | sed 's/.*<version>\(.*\)<\/version>.*/\1/')
+        run: echo "VERSION=$(grep -m1 '<version>' api/pom.xml | sed 's/.*<version>\(.*\)<\/version>.*/\1/')" >> $GITHUB_ENV
 
       - name: Print Version
-        run: echo "Version:${{ steps.get_version.outputs.VERSION }}"
+        run: echo "Version:\ ${{ env.VERSION }}"
 
-      - name: Build and Package API Module
-        working-directory: ./api  # Navigate to the 'api' directory
+
+      - name: Build and Install API Module
+        working-directory: ./api
         run: mvn clean install
       
       - name: Archive JAR file
         uses: actions/upload-artifact@v3.1.2
         with:
-         name: MaskedCratesAPI-${{ steps.get_version.outputs.VERSION }}
-         path: api/target/MaskedCratesAPI-${{ steps.get_version.outputs.VERSION }}.jar
+         name: MaskedCratesAPI-${{ env.VERSION }}
+         path: api/target/MaskedCratesAPI-${{ env.VERSION }}.jar
       
   release:
     needs: build
@@ -57,21 +58,17 @@ jobs:
       - name: Download JAR file
         uses: actions/download-artifact@v2.1.1
         with:
-          name: MaskedCratesAPI
+          #name: MaskedCratesAPI-${{ env.VERSION }}
           path: target/
-
-      - name: Get Version from POM
-        id: get_version
-        run: echo ::set-output name=VERSION::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
 
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            target/MaskedCratesAPI-${{ steps.get_version.outputs.VERSION }}.jar
-          tag_name: v${{ steps.get_version.outputs.VERSION }}
-          name: Release v${{ steps.get_version.outputs.VERSION }}
+            target/MaskedCratesAPI-${{ env.VERSION }}.jar
+          tag_name: v${{ env.VERSION }}
+          name: Release v${{ env.VERSION }}
           generate_release_notes: true
           draft: false
           prerelease: false
