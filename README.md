@@ -107,30 +107,29 @@ By following these integration steps, your plugin will be seamlessly integrated 
 
 # Available methods from MaskedCratesAPI
 
-```java
-int getCratesOpened(Player player, Crate crate);
-```
-
 Gets the number of times the specified player has opened the given crate.
 
 ```java
-Crate getCrate(String crateName);
+int getCratesOpened(Player player, Crate crate);
 ```
 
 Gets the `Crate` object corresponding to the specified crate name.
 
 ```java
-Crate getCrate(ItemStack itemStack);
+Crate getCrate(String crateName);
 ```
 
 Gets the `Crate` object associated with the given `ItemStack` if it represents a crate.
 
 ```java
-void openCrate(Player player, Crate crate);
+Crate getCrate(ItemStack itemStack);
 ```
 
 Opens the specified crate for the given player.
 
+```java
+void openCrate(Player player, Crate crate);
+```
 ---
 
 # Using Events from MaskedCratesAPI
