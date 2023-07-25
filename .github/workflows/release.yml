@@ -1,12 +1,9 @@
 name: Release on Main Push
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Enter the version in semantic version format (e.g., 1.0.0)'
-        required: true
-        default: '1.0.0'
+  push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -19,22 +16,27 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v1
         with:
-          java-version: '17'  # Set Java version to 17
+         java-version: '17'  # Set Java version to 17
 
       - name: Show Java version
         run: java -version
 
       - name: Show Maven version
         run: mvn -version
-        
-      - name: Build with Maven
-        run: mvn package
-        
+      
+      - name: Get Version from POM
+        id: get_version
+        run: echo ::set-output name=VERSION::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+
+      - name: Build and Package API Module
+        working-directory: ./api  # Navigate to the 'api' directory
+        run: mvn clean install
+      
       - name: Archive JAR file
         uses: actions/upload-artifact@v3.1.2
         with:
-          name: MaskedCratesAPI
-          path: target/MaskedCratesAPI-1.0-SNAPSHOT.jar
+         name: MaskedCratesAPI-${{ steps.get_version.outputs.VERSION }}  # Use the version from the POM file
+         path: api/target/MaskedCratesAPI-${{ steps.get_version.outputs.VERSION }}.jar  # Correct the path to the generated JAR file
       
   release:
     needs: build
@@ -55,18 +57,18 @@ jobs:
           name: MaskedCratesAPI
           path: target/
 
-      - name: Rename Jar
-        run: |
-          mv target/MaskedCratesAPI-1.0-SNAPSHOT.jar target/MaskedCratesAPI-${{ github.event.inputs.version }}.jar
+      - name: Get Version from POM
+        id: get_version
+        run: echo ::set-output name=VERSION::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
 
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            target/MaskedCratesAPI-${{ github.event.inputs.version }}.jar
-          tag_name: ${{ github.event.inputs.version }}
-          name: Release v${{ github.event.inputs.version }}
+            target/MaskedCratesAPI-${{ steps.get_version.outputs.VERSION }}.jar
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          name: Release v${{ steps.get_version.outputs.VERSION }}
           generate_release_notes: true
           draft: false
           prerelease: false
