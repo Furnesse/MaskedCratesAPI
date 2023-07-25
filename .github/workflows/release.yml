@@ -26,7 +26,10 @@ jobs:
       
       - name: Get Version from POM
         id: get_version
-        run: echo ::set-output name=VERSION::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        run: echo ::set-output name=VERSION::$(grep -m1 '<version>' api/pom.xml | sed 's/.*<version>\(.*\)<\/version>.*/\1/')
+
+      - name: Print Version
+        run: echo "Version:${{ steps.get_version.outputs.VERSION }}"
 
       - name: Build and Package API Module
         working-directory: ./api  # Navigate to the 'api' directory
@@ -35,8 +38,8 @@ jobs:
       - name: Archive JAR file
         uses: actions/upload-artifact@v3.1.2
         with:
-         name: MaskedCratesAPI-${{ steps.get_version.outputs.VERSION }}  # Use the version from the POM file
-         path: api/target/MaskedCratesAPI-${{ steps.get_version.outputs.VERSION }}.jar  # Correct the path to the generated JAR file
+         name: MaskedCratesAPI-${{ steps.get_version.outputs.VERSION }}
+         path: api/target/MaskedCratesAPI-${{ steps.get_version.outputs.VERSION }}.jar
       
   release:
     needs: build
