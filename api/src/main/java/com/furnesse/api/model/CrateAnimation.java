@@ -80,7 +80,7 @@ public abstract class CrateAnimation {
                     return;
                 }
 
-                if (forceLookAt && !faceDirection(player, stand.getLocation())) {
+                if (forceLookAt && !faceDirection(player, stand.getEyeLocation())) {
                     api.endAnimation(hologram, false, true);
                     cancel();
                     return;
