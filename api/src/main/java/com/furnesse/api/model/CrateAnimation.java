@@ -28,12 +28,14 @@ public abstract class CrateAnimation {
 
         init(hologram);
 
+        ArmorStand stand = hologram.getArmorStand();
+
         new BukkitRunnable() {
             int ticks = 0;
 
             @Override
             public void run() {
-                if (!player.isOnline()) {
+                if (!player.isOnline() || !hologram.isActive()) {
                     hologram.stopAnimation();
                     cancel();
                     return;
@@ -46,14 +48,14 @@ public abstract class CrateAnimation {
                     return;
                 }
 
-                if (forceLookAt && !faceDirection(player, hologram.getArmorStand().getLocation())) {
+                if (forceLookAt && !faceDirection(player, stand.getLocation())) {
                     hologram.stopAnimation();
                     hologram.rewardPlayer(player, false);
                     cancel();
                     return;
                 }
 
-                animate(hologram.getArmorStand(), ticks);
+                animate(player, stand, ticks);
 
                 ticks++;
             }
@@ -62,7 +64,7 @@ public abstract class CrateAnimation {
 
     protected abstract void init(CrateHologram hologram);
 
-    protected abstract void animate(ArmorStand stand, int ticks);
+    protected abstract void animate(Player player, ArmorStand stand, int ticks);
 
     private boolean faceDirection(Player player, Location target) {
         if (!target.getWorld().equals(player.getWorld())) return false;

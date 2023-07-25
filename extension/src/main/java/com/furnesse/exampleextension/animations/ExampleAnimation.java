@@ -44,7 +44,7 @@ public class ExampleAnimation extends CrateAnimation {
     }
 
     @Override
-    public void animate(ArmorStand stand, int ticks) {
+    public void animate(Player player, ArmorStand stand, int ticks) {
         stand.setHeadPose(new EulerAngle(0, 0, headPoses.get(ticks)));
         stand.getWorld().spawnParticle(Particle.CRIT, stand.getEyeLocation(), 1);
     }

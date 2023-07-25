@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>MaskedCratesAPI Parent</name>
+    <name>Parent</name>
     <description>This is the parent POM for the MaskedCratesAPI.</description>
 
     <modules>
