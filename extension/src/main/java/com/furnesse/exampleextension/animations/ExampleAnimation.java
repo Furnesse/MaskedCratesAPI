@@ -1,9 +1,10 @@
 package com.furnesse.exampleextension.animations;
 
 import com.furnesse.api.model.CrateAnimation;
-import com.furnesse.api.model.crate.CrateHologram;
+import com.furnesse.api.model.crate.ICrateHologram;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -31,7 +32,7 @@ public class ExampleAnimation extends CrateAnimation {
     }
 
     @Override
-    public void init(CrateHologram hologram) {
+    public void init(ICrateHologram hologram) {
         Player player = hologram.getPlayer();
 
         // Spawns the hologram 3 blocks in front of the player and player's eye level
@@ -41,6 +42,12 @@ public class ExampleAnimation extends CrateAnimation {
 
         // Spawns the hologram aka the armorstand that will be manipulated in the animate method
         hologram.spawn(holoLoc);
+    }
+
+    @Override
+    protected void actionOnEnd(Player player, ArmorStand stand, int ticks) {
+        player.playSound(stand.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 2.0F, 1.0F);
+        stand.setHeadPose(new EulerAngle(0, 0, 0));
     }
 
     @Override

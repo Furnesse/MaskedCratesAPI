@@ -1,13 +1,11 @@
 package com.furnesse.api;
 
-import com.furnesse.api.model.CrateAnimation;
-import com.furnesse.api.model.CrateEffect;
+import com.furnesse.api.model.crate.ICrateHologram;
 import com.furnesse.api.model.crate.ICrate;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public abstract class MaskedCratesAPI {
@@ -34,35 +32,40 @@ public abstract class MaskedCratesAPI {
         }
     }
 
-    // Use lists to store registered effects and animations
-    private final List<CrateEffect> registeredEffects = new ArrayList<>();
-    private final List<CrateAnimation> registeredAnimations = new ArrayList<>();
-
-    // Method for plugins to register effects
-    public void registerEffect(CrateEffect effect) {
-        registeredEffects.add(effect);
-    }
-
-    // Method for plugins to register animations
-    public void registerAnimation(CrateAnimation animation) {
-        registeredAnimations.add(animation);
-    }
-
-    // Method to retrieve all registered effects
-    public List<CrateEffect> getRegisteredEffects() {
-        return Collections.unmodifiableList(registeredEffects);
-    }
-
-    // Method to retrieve all registered animations
-    public List<CrateAnimation> getRegisteredAnimations() {
-        return Collections.unmodifiableList(registeredAnimations);
-    }
-
+    /**
+     * Returns the amount of crates a player has opened of a certain type
+     *
+     * @param player The player to check
+     * @param crate  The crate to check
+     * @return The amount of crates the player has opened
+     */
     public abstract int getCratesOpened(Player player, ICrate crate);
 
+    /**
+     * Returns the crate with the given name or null if it doesn't exist
+     * <p> The name is case insensitive </p>
+     *
+     * @param s The name of the crate
+     * @return The crate with the given name or null if it doesn't exist
+     */
     public abstract ICrate getCrate(String s);
 
+    /**
+     * Returns the crate that is represented by the given item stack
+     * <p> Returns null if the item stack doesn't represent a crate </p>
+     *
+     * @param itemStack The item stack to check
+     * @return The crate that is represented by the given item stack
+     */
     public abstract ICrate getCrate(ItemStack itemStack);
 
+    /**
+     * Opens the given crate for the given player
+     *
+     * @param player The player to open the crate for
+     * @param crate  The crate to open
+     */
     public abstract void openCrate(Player player, ICrate crate);
+
+    public abstract void endAnimation(ICrateHologram crateHologram, boolean rewardPreview, boolean cancelled);
 }
