@@ -2,7 +2,10 @@ package com.furnesse.api.model;
 
 import com.furnesse.api.MaskedCratesAPI;
 import com.furnesse.api.MaskedCratesServiceLocator;
-import com.furnesse.api.model.crate.ICrateHologram;
+import com.furnesse.api.events.CancelledCrateOpenEvent;
+import com.furnesse.api.events.OpenedCrateEvent;
+import com.furnesse.api.model.crate.ActiveCrate;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -54,34 +57,41 @@ public abstract class CrateAnimation {
     /**
      * Starts the animation for the player
      *
-     * @param hologram The hologram that is being animated
+     * @param activeCrate The activeCrate that is being animated
      */
-    public void playAnimation(ICrateHologram hologram) {
-        final Player player = hologram.getPlayer();
+    public void playAnimation(ActiveCrate activeCrate) {
+        final Player player = activeCrate.getPlayer();
 
-        init(hologram);
+        init(activeCrate);
 
-        final ArmorStand stand = hologram.getArmorStand();
+        final ArmorStand stand = activeCrate.getArmorStand();
 
         new BukkitRunnable() {
             int ticks = 0;
 
             @Override
             public void run() {
-                if (!player.isOnline() || !hologram.isActive()) {
-                    hologram.stopAnimation();
+                if (!player.isOnline() || !activeCrate.isActive()) {
+                    activeCrate.stopAnimation();
                     cancel();
                     return;
                 }
 
                 if (ticks >= maxTicks) {
-                    api.endAnimation(hologram, rewardPreview, false);
+                    api.endAnimation(activeCrate, rewardPreview, true);
+                    Bukkit.getPluginManager().callEvent(new OpenedCrateEvent(player, activeCrate));
+                    actionOnEnd(player, stand, ticks);
                     cancel();
                     return;
                 }
 
                 if (forceLookAt && !faceDirection(player, stand.getEyeLocation())) {
-                    api.endAnimation(hologram, false, true);
+                    CancelledCrateOpenEvent event = new CancelledCrateOpenEvent(player, activeCrate, ac -> {
+                        api.endAnimation(ac, false, false);
+                    }, CancelledCrateOpenEvent.Reason.TELEPORT);
+
+                    Bukkit.getPluginManager().callEvent(event);
+
                     cancel();
                     return;
                 }
@@ -99,7 +109,7 @@ public abstract class CrateAnimation {
      *
      * @param hologram The hologram that is being animated
      */
-    protected abstract void init(ICrateHologram hologram);
+    protected abstract void init(ActiveCrate hologram);
 
     /**
      * Called when the animation is finished, it will reward the player and stop the

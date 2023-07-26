@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public interface IReward {
+public interface Reward {
     /**
      * Give the reward to the player
      *
@@ -32,4 +32,8 @@ public interface IReward {
      * @return The chance of the reward being given
      */
     int getChance();
+
+    String getRewardMessage();
+
+    String getRewardName();
 }

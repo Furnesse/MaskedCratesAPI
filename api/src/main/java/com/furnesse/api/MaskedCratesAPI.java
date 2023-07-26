@@ -1,7 +1,7 @@
 package com.furnesse.api;
 
-import com.furnesse.api.model.crate.ICrateHologram;
-import com.furnesse.api.model.crate.ICrate;
+import com.furnesse.api.model.crate.ActiveCrate;
+import com.furnesse.api.model.crate.Crate;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -39,7 +39,7 @@ public abstract class MaskedCratesAPI {
      * @param crate  The crate to check
      * @return The amount of crates the player has opened
      */
-    public abstract int getCratesOpened(Player player, ICrate crate);
+    public abstract int getCratesOpened(Player player, Crate crate);
 
     /**
      * Returns the crate with the given name or null if it doesn't exist
@@ -48,7 +48,7 @@ public abstract class MaskedCratesAPI {
      * @param s The name of the crate
      * @return The crate with the given name or null if it doesn't exist
      */
-    public abstract ICrate getCrate(String s);
+    public abstract Crate getCrate(String s);
 
     /**
      * Returns the crate that is represented by the given item stack
@@ -57,7 +57,7 @@ public abstract class MaskedCratesAPI {
      * @param itemStack The item stack to check
      * @return The crate that is represented by the given item stack
      */
-    public abstract ICrate getCrate(ItemStack itemStack);
+    public abstract Crate getCrate(ItemStack itemStack);
 
     /**
      * Opens the given crate for the given player
@@ -65,7 +65,7 @@ public abstract class MaskedCratesAPI {
      * @param player The player to open the crate for
      * @param crate  The crate to open
      */
-    public abstract void openCrate(Player player, ICrate crate);
+    public abstract void openCrate(Player player, Crate crate);
 
-    public abstract void endAnimation(ICrateHologram crateHologram, boolean rewardPreview, boolean cancelled);
+    public abstract void endAnimation(ActiveCrate crateHologram, boolean rewardPreview, boolean rewardPlayer);
 }

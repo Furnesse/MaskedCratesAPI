@@ -2,36 +2,33 @@ package com.furnesse.api.events;
 
 import com.furnesse.api.model.crate.ActiveCrate;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-public class OpenCrateEvent extends Event implements Cancellable {
-    public enum OpenType {
-        COMMAND,
-        ITEM,
-        MENU,
-        CUSTOM
+public class CancelledCrateOpenEvent extends Event {
+    public enum Reason {
+        ALREADY_OPENING,
+        DEATH,
+        CUSTOM,
+        LEAVE,
+        TELEPORT
     }
 
     private static final HandlerList handlers = new HandlerList();
 
     private final Player player;
     private final ActiveCrate activeCrate;
-    private final OpenType openType;
     private final Consumer<ActiveCrate> consumer;
-    private boolean cancelled;
+    private final Reason reason;
 
-    public OpenCrateEvent(Player player, ActiveCrate activeCrate, OpenType openType, Consumer<ActiveCrate> consumer) {
+    public CancelledCrateOpenEvent(Player player, ActiveCrate activeCrate, Consumer<ActiveCrate> consumer, Reason reason) {
         this.player = player;
         this.activeCrate = activeCrate;
-        this.openType = openType;
         this.consumer = consumer;
-
-        cancelled = false;
+        this.reason = reason;
     }
 
     public Player getPlayer() {
@@ -46,8 +43,8 @@ public class OpenCrateEvent extends Event implements Cancellable {
         return consumer;
     }
 
-    public OpenType getOpenType() {
-        return openType;
+    public Reason getReason() {
+        return reason;
     }
 
     public static HandlerList getHandlerList() {
@@ -57,15 +54,5 @@ public class OpenCrateEvent extends Event implements Cancellable {
     @Override
     public @NotNull HandlerList getHandlers() {
         return handlers;
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    @Override
-    public void setCancelled(boolean b) {
-        cancelled = b;
     }
 }

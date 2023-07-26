@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 
-public interface ICrateHologram {
+public interface ActiveCrate {
     boolean isActive();
 
     /**
@@ -22,7 +22,7 @@ public interface ICrateHologram {
      * reward will be previewed to the player before giving it to them, otherwise,
      * if rewardPreview is false, the reward will be given to the player.
      *
-     * @param player        The player to reward
+     * @param player The player to reward
      */
     void previewReward(Player player);
 
@@ -31,14 +31,14 @@ public interface ICrateHologram {
      *
      * @return The reward
      */
-    IReward getReward();
+    Reward getReward();
 
     /**
      * The crate that the player is opening.
      *
      * @return The crate
      */
-    ICrate getCrate();
+    Crate getCrate();
 
     /**
      * The player that is opening the crate.

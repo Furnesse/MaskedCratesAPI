@@ -1,15 +1,17 @@
 package com.furnesse.api.model.crate;
 
 import com.furnesse.api.model.CrateAnimation;
-import com.furnesse.api.model.Hologram;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public interface ICrate {
+public interface Crate {
     String getId();
+
+    boolean hasBroadcastMessage();
+
+    String getBroadcastMessage();
 
     ItemStack getCrateItem();
 
@@ -19,11 +21,13 @@ public interface ICrate {
 
     List<String> getHologramLines();
 
-    List<IReward> getRewards();
+    List<Reward> getRewards();
 
-    IReward getReward(String rewardId);
+    Reward getReward(String rewardId);
 
     boolean canViewRewards(Player player);
 
     boolean canOpenCrate(Player player);
+
+    boolean isForceLookAt();
 }

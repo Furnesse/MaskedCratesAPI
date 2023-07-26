@@ -1,7 +1,7 @@
 package com.furnesse.exampleextension.animations;
 
 import com.furnesse.api.model.CrateAnimation;
-import com.furnesse.api.model.crate.ICrateHologram;
+import com.furnesse.api.model.crate.ActiveCrate;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -19,6 +19,19 @@ public class ExampleAnimation extends CrateAnimation {
         loadHeadPoses();
     }
 
+    @Override
+    protected void init(ActiveCrate activeCrate) {
+        Player player = activeCrate.getPlayer();
+
+        // Spawns the hologram 3 blocks in front of the player and player's eye level
+        Location holoLoc = player.getEyeLocation().add(player.getLocation().getDirection().multiply(3).setY(-1.5));
+        // Makes the hologram face the player
+        holoLoc = holoLoc.setDirection(player.getLocation().subtract(holoLoc).toVector());
+
+        // Spawns the hologram aka the armorstand that will be manipulated in the animate method
+        activeCrate.spawn(holoLoc);
+    }
+
     private final List<Double> headPoses = new ArrayList<>();
 
     private void loadHeadPoses() {
@@ -29,19 +42,6 @@ public class ExampleAnimation extends CrateAnimation {
             double y = 1 * Math.exp(-i * damping) * (Math.sin((6.28 / getMaxTicks() * i) * i * speedFactor));
             headPoses.add(y);
         }
-    }
-
-    @Override
-    public void init(ICrateHologram hologram) {
-        Player player = hologram.getPlayer();
-
-        // Spawns the hologram 3 blocks in front of the player and player's eye level
-        Location holoLoc = player.getEyeLocation().add(player.getLocation().getDirection().multiply(3).setY(-1.5));
-        // Makes the hologram face the player
-        holoLoc = holoLoc.setDirection(player.getLocation().subtract(holoLoc).toVector());
-
-        // Spawns the hologram aka the armorstand that will be manipulated in the animate method
-        hologram.spawn(holoLoc);
     }
 
     @Override
