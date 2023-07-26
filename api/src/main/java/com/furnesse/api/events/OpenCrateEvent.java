@@ -7,8 +7,6 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
-
 public class OpenCrateEvent extends Event implements Cancellable {
     public enum OpenType {
         COMMAND,
@@ -22,14 +20,12 @@ public class OpenCrateEvent extends Event implements Cancellable {
     private final Player player;
     private final ActiveCrate activeCrate;
     private final OpenType openType;
-    private final Consumer<ActiveCrate> consumer;
     private boolean cancelled;
 
-    public OpenCrateEvent(Player player, ActiveCrate activeCrate, OpenType openType, Consumer<ActiveCrate> consumer) {
+    public OpenCrateEvent(Player player, ActiveCrate activeCrate, OpenType openType) {
         this.player = player;
         this.activeCrate = activeCrate;
         this.openType = openType;
-        this.consumer = consumer;
 
         cancelled = false;
     }
@@ -40,10 +36,6 @@ public class OpenCrateEvent extends Event implements Cancellable {
 
     public ActiveCrate getActiveCrate() {
         return activeCrate;
-    }
-
-    public Consumer<ActiveCrate> getConsumer() {
-        return consumer;
     }
 
     public OpenType getOpenType() {
