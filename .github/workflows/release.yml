@@ -59,8 +59,8 @@ jobs:
       - name: Download JAR file
         uses: actions/download-artifact@v2.1.1
         with:
-          #name: MaskedCratesAPI-${{ env.VERSION }}
-          path: target/
+         name: MaskedCratesAPI-${{ env.VERSION }}
+         path: api/target/MaskedCratesAPI-${{ env.VERSION }}.jar
 
       - name: Get Version from POM
         id: get_version
