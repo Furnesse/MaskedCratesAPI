@@ -18,30 +18,15 @@ jobs:
         with:
          java-version: '17'  # Set Java version to 17
 
-      - name: Show Java version
-        run: java -version
-
-      - name: Show Maven version
-        run: mvn -version
-      
-      - name: Get Version from POM
-        id: get_version
+      - name: Build API Module
         working-directory: ./api
-        run: echo "VERSION=$(grep -m1 '<version>[^<]*<\/version>' pom.xml | sed 's/.*<version>\([^<]*\)<\/version>.*/\1/')" >> $GITHUB_ENV
-
-      - name: Print Version
-        run: echo "Version:\ ${{ env.VERSION }}"
-
-
-      - name: Build and Install API Module
-        working-directory: ./api
-        run: mvn clean install
+        run: mvn clean package
       
       - name: Archive JAR file
-        uses: actions/upload-artifact@v3.1.2
+        uses: actions/upload-artifact@v3
         with:
-         name: MaskedCratesAPI-${{ env.VERSION }}
-         path: api/target/MaskedCratesAPI-${{ env.VERSION }}.jar
+          name: MaskedCratesAPI
+          path: api/target/MaskedCratesAPI-*.jar
       
   release:
     needs: build
@@ -59,20 +44,19 @@ jobs:
       - name: Download JAR file
         uses: actions/download-artifact@v2.1.1
         with:
-         name: MaskedCratesAPI-${{ env.VERSION }}
-         path: api/target/MaskedCratesAPI-${{ env.VERSION }}.jar
+          name: MaskedCratesAPI
+          path: target/
 
-      - name: Get Version from POM
-        id: get_version
-        working-directory: ./api
-        run: echo "VERSION=$(grep -m1 '<version>[^<]*<\/version>' pom.xml | sed 's/.*<version>\([^<]*\)<\/version>.*/\1/')" >> $GITHUB_ENV
+      - name: Set Version from POM
+        id: set_version
+        run: echo "VERSION=$(grep -m1 '<version>[^<]*</version>' api/pom.xml | sed 's/.*<version>\([^<]*\)<\/version>.*/\1/')" >> $GITHUB_ENV
 
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            target/MaskedCratesAPI-${{ env.VERSION }}.jar
+            target/MaskedCratesAPI-*.jar
           tag_name: v${{ env.VERSION }}
           name: Release v${{ env.VERSION }}
           generate_release_notes: true
