@@ -5,6 +5,7 @@ before_install:
   - chmod +x mvnw
 
 install:
+  - cd api
   - ./mvnw clean install -DskipTests=true -Dmaven.javadoc.skip=true
 
 branches:
