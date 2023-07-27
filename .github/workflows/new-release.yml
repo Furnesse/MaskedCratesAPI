@@ -6,41 +6,7 @@ on:
       - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v1
-        with:
-         java-version: '17'  # Set Java version to 17
-
-      - name: Build API Module
-        working-directory: ./api
-        run: mvn clean install
-      
-      - name: Get Version from POM
-        id: get_version
-        working-directory: ./api
-        run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
-      
-      - name: Print Version
-        run: echo "Version:\ ${{ env.VERSION }}"
-      
-      - name: List Contents of target directory
-        run: ls -l api/target/
-      
-      - name: Archive JAR file
-        uses: actions/upload-artifact@v3
-        with:
-          name: MaskedCratesAPI
-          path: api/target/MaskedCratesAPI-${{ env.VERSION }}.jar
-      
   release:
-    needs: build
     runs-on: ubuntu-latest
 
     steps:
@@ -52,6 +18,10 @@ jobs:
         with:
           java-version: '17'  # Set Java version to 17
 
+      - name: Build API Module
+        working-directory: ./api
+        run: mvn clean install
+
       - name: Get Version from POM
         id: get_version
         working-directory: ./api
@@ -60,13 +30,16 @@ jobs:
       - name: Print Version
         run: echo "Version:\ ${{ env.VERSION }}"
 
-      - name: Download JAR file
-        uses: actions/download-artifact@v2.1.1
+      - name: List Contents of target directory
+        run: ls -l api/target/
+
+      - name: Archive JAR file
+        uses: actions/upload-artifact@v3
         with:
           name: MaskedCratesAPI
           path: api/target/MaskedCratesAPI-${{ env.VERSION }}.jar
 
-      - name: Create Release
+      - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
