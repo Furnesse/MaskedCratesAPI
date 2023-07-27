@@ -78,9 +78,10 @@ public abstract class CrateAnimation {
                 }
 
                 if (ticks >= maxTicks) {
-                    api.endAnimation(activeCrate, rewardPreview, true);
-                    Bukkit.getPluginManager().callEvent(new OpenedCrateEvent(player, activeCrate));
-                    actionOnEnd(player, stand, ticks);
+                    Bukkit.getPluginManager().callEvent(new OpenedCrateEvent(player, activeCrate, ac -> {
+                        api.endAnimation(activeCrate, rewardPreview, true);
+                        actionOnEnd(player, stand, ticks);
+                    }));
                     cancel();
                     return;
                 }
@@ -117,9 +118,9 @@ public abstract class CrateAnimation {
      *
      * @param player The player that is opening the crate
      * @param stand  The armorstand that is being animated
-     * @param ticks  The amount of ticks the animation has been running
+     * @param tick   The amount of ticks the animation has been running
      */
-    protected abstract void actionOnEnd(Player player, ArmorStand stand, int ticks);
+    protected abstract void actionOnEnd(Player player, ArmorStand stand, int tick);
 
     /**
      * Called every tick of the animation, it is used to animate the armorstand
@@ -127,10 +128,17 @@ public abstract class CrateAnimation {
      *
      * @param player The player that is opening the crate
      * @param stand  The armorstand that is being animated
-     * @param ticks  The amount of ticks the animation has been running
+     * @param tick   The amount of ticks the animation has been running
      */
-    protected abstract void animate(Player player, ArmorStand stand, int ticks);
+    protected abstract void animate(Player player, ArmorStand stand, int tick);
 
+    /**
+     * Makes the player face the target location
+     *
+     * @param player The player that is opening the crate
+     * @param target The location the player should face
+     * @return Whether the player is still in the same world as the target
+     */
     private boolean faceDirection(Player player, Location target) {
         if (!target.getWorld().equals(player.getWorld())) return false;
 
@@ -141,7 +149,14 @@ public abstract class CrateAnimation {
         return true;
     }
 
-    protected void playEffect(String effectId, Player player, Location location) {
+    /**
+     * Plays an effect at the location of the armorstand
+     *
+     * @param effectId   The id of the effect
+     * @param player     The player that is opening the crate
+     * @param armorStand The armorstand that is being animated
+     */
+    protected void playEffect(String effectId, Player player, ArmorStand armorStand) {
         CrateEffect effect = CrateEffect.getEffect(effectId);
 
         if (effect == null) {
@@ -149,7 +164,7 @@ public abstract class CrateAnimation {
             return;
         }
 
-        effect.playEffect(player, location);
+        effect.playEffect(player, armorStand.getEyeLocation());
     }
 
     protected void setVariables(double... values) {

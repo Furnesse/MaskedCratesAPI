@@ -6,15 +6,19 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Consumer;
+
 public class OpenedCrateEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     private final Player player;
     private final ActiveCrate activeCrate;
+    private final Consumer<ActiveCrate> consumer;
 
-    public OpenedCrateEvent(Player player, ActiveCrate activeCrate) {
+    public OpenedCrateEvent(Player player, ActiveCrate activeCrate, Consumer<ActiveCrate> consumer) {
         this.player = player;
         this.activeCrate = activeCrate;
+        this.consumer = consumer;
     }
 
     public Player getPlayer() {
@@ -23,6 +27,10 @@ public class OpenedCrateEvent extends Event {
 
     public ActiveCrate getActiveCrate() {
         return activeCrate;
+    }
+
+    public Consumer<ActiveCrate> getConsumer() {
+        return consumer;
     }
 
     public static HandlerList getHandlerList() {

@@ -7,8 +7,6 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 public interface Crate {
-    String getId();
-
     boolean hasBroadcastMessage();
 
     String getBroadcastMessage();
@@ -30,4 +28,7 @@ public interface Crate {
     boolean canOpenCrate(Player player);
 
     boolean isForceLookAt();
+
+    void setCrateName(String name);
+    void setRewards(List<Reward> rewards);
 }

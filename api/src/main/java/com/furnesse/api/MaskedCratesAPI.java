@@ -67,5 +67,14 @@ public abstract class MaskedCratesAPI {
      */
     public abstract void openCrate(Player player, Crate crate);
 
+    /**
+     * Ends the animation of an active crate.
+     * <p> This method is called when the animation is finished or when the player leaves the server </p>
+     * rewardPreview is only shown if both rewardPreview and rewardPlayer are true
+     *
+     * @param crateHologram The active crate to end the animation for
+     * @param rewardPreview Whether it should preview the reward
+     * @param rewardPlayer  Whether the player should be rewarded
+     */
     public abstract void endAnimation(ActiveCrate crateHologram, boolean rewardPreview, boolean rewardPlayer);
 }
