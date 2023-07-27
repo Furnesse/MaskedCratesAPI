@@ -152,11 +152,11 @@ public abstract class CrateAnimation {
     /**
      * Plays an effect at the location of the armorstand
      *
-     * @param effectId   The id of the effect
-     * @param player     The player that is opening the crate
-     * @param armorStand The armorstand that is being animated
+     * @param effectId The id of the effect
+     * @param player   The player that is opening the crate
+     * @param location The location to play the effect at
      */
-    protected void playEffect(String effectId, Player player, ArmorStand armorStand) {
+    protected void playEffect(String effectId, Player player, Location location) {
         CrateEffect effect = CrateEffect.getEffect(effectId);
 
         if (effect == null) {
@@ -164,7 +164,7 @@ public abstract class CrateAnimation {
             return;
         }
 
-        effect.playEffect(player, armorStand.getEyeLocation());
+        effect.playEffect(player, location);
     }
 
     protected void setVariables(double... values) {
