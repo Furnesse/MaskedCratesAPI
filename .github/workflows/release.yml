@@ -22,11 +22,16 @@ jobs:
         working-directory: ./api
         run: mvn clean package
       
+      - name: Get Version from POM
+        id: get_version
+        working-directory: ./api
+        run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+      
       - name: Archive JAR file
         uses: actions/upload-artifact@v3
         with:
           name: MaskedCratesAPI
-          path: api/target/MaskedCratesAPI-*.jar
+          path: api/target/MaskedCratesAPI-${{ env.VERSION }}.jar
       
   release:
     needs: build
@@ -47,16 +52,20 @@ jobs:
           name: MaskedCratesAPI
           path: target/
 
-      - name: Set Version from POM
-        id: set_version
-        run: echo "VERSION=$(grep -m1 '<version>[^<]*</version>' api/pom.xml | sed 's/.*<version>\([^<]*\)<\/version>.*/\1/')" >> $GITHUB_ENV
+      - name: Get Version from POM
+        id: get_version
+        working-directory: ./api
+        run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+
+      - name: Print Version
+        run: echo "Version:\ ${{ env.VERSION }}"
 
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            target/MaskedCratesAPI-*.jar
+            target/MaskedCratesAPI-${{ env.VERSION }}.jar
           tag_name: v${{ env.VERSION }}
           name: Release v${{ env.VERSION }}
           generate_release_notes: true
