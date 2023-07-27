@@ -27,6 +27,12 @@ jobs:
         working-directory: ./api
         run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
       
+      - name: Print Version
+        run: echo "Version:\ ${{ env.VERSION }}"
+      
+      - name: List Contents of target directory
+        run: ls -l api/target/
+      
       - name: Archive JAR file
         uses: actions/upload-artifact@v3
         with:
@@ -66,7 +72,7 @@ jobs:
         with:
           files: |
             target/MaskedCratesAPI-${{ env.VERSION }}.jar
-          tag_name: v${{ env.VERSION }}
+          tag_name: v${{ env.VERSION }}-${{ github.run_number }}
           name: Release v${{ env.VERSION }}
           generate_release_notes: true
           draft: false
