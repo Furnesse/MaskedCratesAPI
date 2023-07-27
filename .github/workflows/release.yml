@@ -20,7 +20,7 @@ jobs:
 
       - name: Build API Module
         working-directory: ./api
-        run: mvn clean package
+        run: mvn clean install
       
       - name: Get Version from POM
         id: get_version
@@ -50,7 +50,7 @@ jobs:
         uses: actions/download-artifact@v2.1.1
         with:
           name: MaskedCratesAPI
-          path: target/
+          path: api/target/MaskedCratesAPI-${{ env.VERSION }}.jar
 
       - name: Get Version from POM
         id: get_version
