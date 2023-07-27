@@ -50,6 +50,80 @@ Replace `{VERSION}` with the specific release tag or commit hash of MaskedCrates
 
 Follow these steps to integrate your plugin with the MaskedCratesAPI:
 
+### Step 1: Create your CrateAnimation or CrateEffect
+**CrateAnimation**
+```java
+public class ExampleAnimation extends CrateAnimation {
+    public ExampleAnimation(JavaPlugin plugin, String id, int maxTicks, boolean rewardPreview, boolean forceLookAt) {
+        super(plugin, id, maxTicks, rewardPreview, forceLookAt);
+    }
+
+    @Override
+    protected void init(ActiveCrate activeCrate) {
+        // This step is crucial as this initializes the armorstand
+        // that are being animated
+
+        Player player = activeCrate.getPlayer();
+
+        // Spawns the hologram 3 blocks in front of the player and player's eye level
+        Location holoLoc = player.getEyeLocation().add(player.getLocation().getDirection().multiply(3).setY(-1.5));
+        // Makes the hologram face the player
+        holoLoc = holoLoc.setDirection(player.getLocation().subtract(holoLoc).toVector());
+
+        // Spawns the hologram aka the armorstand that will be manipulated in the animate method
+        activeCrate.spawn(holoLoc);
+    }
+
+    @Override
+    protected void actionOnEnd(Player player, ArmorStand stand, int tick) {
+        // Action that will happend at the end of the animation
+        // - could be a sound or an effect, what ever you please
+        // - it could also just be nothing, as the reward may do
+        // what you want,
+    }
+
+    @Override
+    public void animate(Player player, ArmorStand stand, int tick) {
+        // This method will get called every tick of the animation
+        // the 'tick' argument is the current tick.
+    }
+```
+
+**CrateEffect**
+```java
+public class ExampleEffect extends CrateEffect {
+    public ExampleEffect(Plugin plugin, String id) {
+        super(plugin, id);
+    }
+
+    // This particular effect creates a particle sphere
+    @Override
+    public void playEffect(Player player, Location location) {
+        final Location flameloc = location;
+        new BukkitRunnable() {
+            double phi = 0.0D;
+
+            public void run() {
+                this.phi += Math.PI / 10;
+                for (double theta = 0.0D; theta <= 6.283185307179586D; theta += 0.15707963267948966D) {
+                    double r = 1.5D;
+                    double x = r * Math.cos(theta) * Math.sin(this.phi);
+                    double y = r * Math.cos(this.phi) + 1.5D;
+                    double z = r * Math.sin(theta) * Math.sin(this.phi);
+                    flameloc.add(x, y, z);
+                    flameloc.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, flameloc.getX(), flameloc.getY(), flameloc.getZ(), 0);
+                    flameloc.subtract(x, y, z);
+                }
+
+                if (this.phi > Math.PI) {
+                    cancel();
+                }
+            }
+        }.runTaskTimer(getPlugin(), 0L, 1L);
+    }
+}
+```
+
 ### Step 1: Implement MaskedCratesExtension Interface
 
 Your plugin needs to implement the `MaskedCratesExtension` interface provided by the MaskedCratesAPI. This interface defines the contract that your plugin needs to fulfill to extend the functionality of MaskedCrates.
@@ -60,12 +134,13 @@ import com.furnesse.maskedcrates.api.MaskedCratesExtension;
 public class MyPlugin implements MaskedCratesExtension {
     @Override
     public void registerEffects() {
-        // Implement your functionality here
+        new ExampleEffect(plugin, "example");
     }
 
     @Override
     public void registerAnimations() {
-        // Implement your functionality here
+        // 100 meaning the animation will last for 5 seconds 20 ticks = 1 second
+        new ExampleAnimation(plugin, "example", 100, true, true);
     }
 }
 ```
