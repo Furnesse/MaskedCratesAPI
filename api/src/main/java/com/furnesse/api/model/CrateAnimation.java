@@ -89,6 +89,7 @@ public abstract class CrateAnimation {
                 if (forceLookAt && !faceDirection(player, stand.getEyeLocation())) {
                     CancelledCrateOpenEvent event = new CancelledCrateOpenEvent(player, activeCrate, ac -> {
                         api.endAnimation(ac, false, false);
+
                     }, CancelledCrateOpenEvent.Reason.TELEPORT);
 
                     Bukkit.getPluginManager().callEvent(event);

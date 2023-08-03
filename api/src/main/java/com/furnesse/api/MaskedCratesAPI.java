@@ -77,4 +77,13 @@ public abstract class MaskedCratesAPI {
      * @param rewardPlayer  Whether the player should be rewarded
      */
     public abstract void endAnimation(ActiveCrate crateHologram, boolean rewardPreview, boolean rewardPlayer);
+
+    /**
+     * Gives the player the given amount of the given crate
+     *
+     * @param target The player to give the crate to
+     * @param crate  The crate to give
+     * @param amount The amount of crates to give
+     */
+    public abstract void giveCrate(Player target, Crate crate, int amount);
 }

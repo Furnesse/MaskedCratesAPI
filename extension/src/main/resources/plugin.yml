@@ -1,0 +1,7 @@
+name: ExampleExtension
+version: '${project.version}'
+main: com.furnesse.exampleextension.Extension
+api-version: '1.13'
+author: 6u5t4v
+description: 'Extension for MaskedCrates'
+prefix: CratesExtension
